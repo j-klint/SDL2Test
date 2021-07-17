@@ -10,6 +10,7 @@ struct Player
 {
 	SDL_FPoint pos;
 	float dir;
+	int NoseLength{ 10 };
 	void Updatepos(MoveCommand cmd, float speed = 0.63f, float turnRate = 0.032f);
 };
 

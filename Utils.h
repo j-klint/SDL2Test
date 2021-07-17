@@ -24,11 +24,13 @@ constexpr Matrix<3, 3, float> Translation(const SDL_FPoint& d)
 Matrix<3, 3, float> Rotation(float angle);
 
 constexpr float PI = static_cast<float>(M_PI);
+
 constexpr Matrix<3, 3, float> LeftFace{
 		{  0, 1, 0 },
 		{ -1, 0, 0 },
 		{  0, 0, 1 }
 };
+
 constexpr Matrix<3, 3, float> RightFace{
 		{ 0, -1, 0 },
 		{ 1,  0, 0 },

@@ -205,7 +205,7 @@ namespace sdl
 		ptr = temp;
 
 #ifndef NDEBUG
-		std::clog << "Texture move assigned\n";
+		std::clog << "Texture move-assigned\n";
 #endif
 
 		return *this;

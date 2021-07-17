@@ -179,10 +179,12 @@ copy /Y "C:\liberry\SDL2-2.0.14\lib\$(PlatformShortName)\SDL2.dll" "$(ProjectDir
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controls.cpp" />
     <ClCompile Include="SDL2Test.cpp" />
     <ClCompile Include="SDL2_RAII.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controls.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="SDL2_RAII.h" />
   </ItemGroup>

@@ -3,6 +3,7 @@
 #include "SDL2_RAII.h"
 #include <vector>
 #include "Matrix.h"
+#include "Controls.h"
 
 constexpr float PI(M_PI);
 
@@ -14,17 +15,6 @@ struct Wall
 		:end1{ x1,y1 }, end2{ x2,y2 }, color{ clr } {}
 };
 
-struct MoveCommand
-{
-	bool forward{ 0 }, back{ 0 }, left{ 0 }, right{ 0 }, quit{ 0 }, sleft{ 0 }, sright{ 0 };
-};
-
-struct Player
-{
-	SDL_FPoint pos;
-	float dir;
-	void Updatepos(MoveCommand cmd, float speed = 0.63f, float turnRate = 0.032f);
-};
 
 // Nää constexprit ei toimi, jos ne määrittelee vasta myöhemmin.
 constexpr Matrix<3, 3, float> Translation(const SDL_FPoint& d)
@@ -75,7 +65,6 @@ IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, cons
 SDL_FPoint IntersectionPoint(const SDL_FPoint& end1, const SDL_FPoint& end2, const SDL_FPoint& dir);
 
 constexpr float dot(const SDL_FPoint& a, const SDL_FPoint& b) { return a.x*b.x + a.y*b.y; }
-void Gather_inputs(MoveCommand*);
 
 int main(int argc, char* argv[])
 {
@@ -221,68 +210,6 @@ int main(int argc, char* argv[])
 
 	std::cout << "Quit event encountered\n";
 	return 0;
-}
-
-void Player::Updatepos(MoveCommand cmd, float speed, float turnRate)
-{
-	if ( cmd.left && !cmd.right ) dir += turnRate;
-	if ( !cmd.left && cmd.right ) dir -= turnRate;
-	if ( cmd.forward && !cmd.back )
-	{
-		pos.x += std::cos(dir) * speed;
-		pos.y -= std::sin(dir) * speed;
-	}
-	if ( cmd.back && !cmd.forward )
-	{
-		pos.x -= std::cos(dir) * speed;
-		pos.y += std::sin(dir) * speed;
-	}
-	if ( cmd.sleft && !cmd.sright )
-	{
-		pos.x -= std::sin(dir) * speed;
-		pos.y -= std::cos(dir) * speed;
-	}
-	if ( !cmd.sleft && cmd.sright )
-	{
-		pos.x += std::sin(dir) * speed;
-		pos.y += std::cos(dir) * speed;
-	}
-}
-
-void Gather_inputs(MoveCommand* moves)
-{
-	for ( SDL_Event event; !moves->quit && SDL_PollEvent(&event); )
-	{
-		switch ( event.type )
-		{
-		case SDL_QUIT:
-			moves->quit = true; break;
-
-		case SDL_KEYDOWN:
-		case SDL_KEYUP:
-			switch ( event.key.keysym.sym )
-			{
-			case SDLK_ESCAPE:
-				moves->quit = true; break;
-			case SDLK_UP:
-			case SDLK_w:
-				moves->forward = event.type == SDL_KEYDOWN; break;
-			case SDLK_DOWN:
-			case SDLK_s:
-				moves->back = event.type == SDL_KEYDOWN; break;
-			case SDLK_a:
-				moves->sleft = event.type == SDL_KEYDOWN; break;
-			case SDLK_d:
-				moves->sright = event.type == SDL_KEYDOWN; break;
-			case SDLK_LEFT:
-			case SDLK_q:
-				moves->left = event.type == SDL_KEYDOWN; break;
-			case SDLK_RIGHT:
-			case SDLK_e:
-				moves->right = event.type == SDL_KEYDOWN; break;
-			}
-		}
-	}
 }
 
 IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir)

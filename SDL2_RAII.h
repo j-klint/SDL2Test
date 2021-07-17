@@ -91,16 +91,3 @@ namespace sdl
 	Surface LoadBMP(const char* file);
 }
 
-inline SDL_FPoint operator+(const SDL_FPoint& a, const SDL_FPoint& b) { return { a.x + b.x, a.y + b.y }; }
-inline SDL_FPoint operator-(const SDL_FPoint& a, const SDL_FPoint& b) { return { a.x - b.x, a.y - b.y }; }
-inline SDL_FPoint operator-(const SDL_FPoint& p) { return { -p.x, -p.y }; }
-inline SDL_FPoint& operator*=(SDL_FPoint& p, float f)
-{
-	p.x *= f;
-	p.y *= f;
-	return p;
-}
-inline SDL_FPoint operator*(float f, const SDL_FPoint& p)
-{
-	return { p.x * f, p.y * f };
-}

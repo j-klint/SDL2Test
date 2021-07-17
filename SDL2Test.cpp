@@ -2,69 +2,12 @@
 #include <SDL.h>
 #include "SDL2_RAII.h"
 #include <vector>
-#include "Matrix.h"
+#include "Utils.h"
 #include "Controls.h"
-
-constexpr float PI(M_PI);
-
-struct Wall
-{
-	SDL_FPoint end1, end2;
-	SDL_Color color;
-	Wall(float x1, float y1, float x2, float y2, SDL_Color clr)
-		:end1{ x1,y1 }, end2{ x2,y2 }, color{ clr } {}
-};
+#include "Renderings.h"
 
 
-// Nää constexprit ei toimi, jos ne määrittelee vasta myöhemmin.
-constexpr Matrix<3, 3, float> Translation(const SDL_FPoint& d)
-{
-	return Matrix<3, 3, float>{
-		{ 1, 0, d.x },
-		{ 0, 1, d.y },
-		{ 0, 0,   1 }
-	};
-}
 
-// Pyh.Ei ole constexpr trigonometrisiä funktioita.
-Matrix<3, 3, float> Rotation(float angle)
-{
-	return Matrix<3, 3, float>{
-		{  std::cos(angle), std::sin(angle), 0 },
-		{ -std::sin(angle), std::cos(angle), 0 },
-		{                0,               0, 1 }
-	};
-}
-
-constexpr Matrix<3, 3, float> LeftFace{
-		{  0, 1, 0 },
-		{ -1, 0, 0 },
-		{  0, 0, 1 }
-};
-constexpr Matrix<3, 3, float> RightFace{
-		{ 0, -1, 0 },
-		{ 1,  0, 0 },
-		{ 0,  0, 1 }
-};
-
-// cf. Matrix<3,3,float>::operator()(const SDL_FPoint&)
-/*SDL_FPoint operator*(const Matrix<3, 3, float>& M, const SDL_FPoint& pt)
-{
-	auto temp = M * Matrix<3, 1, float>{pt.x, pt.y, 1};
-	return { temp[0][0],temp[1][0] };
-}*/
-
-enum struct IntersectType
-{
-	first_out, second_out, both_in, both_out
-};
-
-IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir);
-
-/// Don't use this unless you've checked that there indeed is an intersection.
-SDL_FPoint IntersectionPoint(const SDL_FPoint& end1, const SDL_FPoint& end2, const SDL_FPoint& dir);
-
-constexpr float dot(const SDL_FPoint& a, const SDL_FPoint& b) { return a.x*b.x + a.y*b.y; }
 
 int main(int argc, char* argv[])
 {
@@ -85,7 +28,8 @@ int main(int argc, char* argv[])
 	Player player{ 150,250, PI/2 };
 	constexpr SDL_FPoint origo { WIDTH / SCREENS * 1.5, HEIGHT / 2 };
 	constexpr SDL_FPoint origo2{ WIDTH / SCREENS * 2.5, HEIGHT / 2 };
-	constexpr auto PlacementTf = Translation(origo);
+	//constexpr
+	auto PlacementTf = Translation(origo);
 	
 	for ( MoveCommand inputs{}; !inputs.quit; )
 	{
@@ -184,7 +128,7 @@ int main(int argc, char* argv[])
 			}
 
 			renderer.SetRenderDrawColor(w.color);
-			SDL_FPoint wireframe[5];
+			SDL_FPoint wireframe[5]{};
 			wireframe[0] = proj(e[0], -10.f);
 			wireframe[1] = proj(e[0], 20.f);
 			wireframe[2] = proj(e[1], 20.f);
@@ -212,22 +156,3 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir)
-{
-	SDL_FPoint normal{ dir.x < 0 ? RightFace(dir) : LeftFace(dir) };
-	float dot1 = dot(normal, a);
-	float dot2 = dot(normal, b);
-
-	if ( dot1 < 0 && dot2 > 0 ) return IntersectType::first_out;
-	if ( dot1 > 0 && dot2 < 0 ) return IntersectType::second_out;
-	if ( dot1 > 0 && dot2 > 0 ) return IntersectType::both_in;
-	return IntersectType::both_out;
-}
-
-SDL_FPoint IntersectionPoint(const SDL_FPoint& end1, const SDL_FPoint& end2, const SDL_FPoint& dir)
-{
-	SDL_FPoint r = end2 - end1;
-	float d = dir.y / dir.x;
-	float s = (end1.y - end1.x * d) / (d * r.x - r.y);
-	return s * r + end1;
-}

@@ -180,13 +180,17 @@ copy /Y "C:\liberry\SDL2-2.0.14\lib\$(PlatformShortName)\SDL2.dll" "$(ProjectDir
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Controls.cpp" />
+    <ClCompile Include="Renderings.cpp" />
     <ClCompile Include="SDL2Test.cpp" />
     <ClCompile Include="SDL2_RAII.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controls.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Renderings.h" />
     <ClInclude Include="SDL2_RAII.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -35,16 +35,17 @@ void RenderWalls2D(
 	const std::vector<Wall>& walls,
 	const Matrix<3, 3, float>& ViewTransform)
 {
-	SDL_FPoint center;
+	//SDL_FPoint center;
 	SDL_Rect frame;
 	SDL_RenderGetViewport(renderer, &frame);
-	center.x = frame.w / 2;
-	center.y = frame.h / 2;
+	//center.x = frame.w / 2;
+	//center.y = frame.h / 2;
+	auto Tr = Translation(frame.w/2, frame.h/2) * ViewTransform;
 	
 	for ( const auto& w : walls )
 	{
 		renderer.SetRenderDrawColor(w.color);
-		renderer.RenderDrawLineF(ViewTransform(w.end1) + center, ViewTransform(w.end2) + center);
+		renderer.RenderDrawLineF(Tr(w.end1), Tr(w.end2));
 	}
 }
 
@@ -56,8 +57,8 @@ void RenderWalls3D(
 	SDL_FPoint center;
 	SDL_Rect frame;
 	SDL_RenderGetViewport(renderer, &frame);
-	center.x = frame.w / 2;
-	center.y = frame.h / 2;
+	center.x = frame.w / 2.f;
+	center.y = frame.h / 2.f;
 
 	auto proj = [&center, width = frame.w / 2](SDL_FPoint p, float h)->SDL_FPoint
 	{
@@ -118,8 +119,8 @@ void RenderPlayer(SDL_Renderer* renderer, const Player& player, bool absolute)
 	{
 		SDL_Rect frame;
 		SDL_RenderGetViewport(renderer, &frame);
-		pos.x = frame.w / 2;
-		pos.y = frame.h / 2;
+		pos.x = frame.w / 2.f;
+		pos.y = frame.h / 2.f;
 		dir = PI/2;
 	}
 

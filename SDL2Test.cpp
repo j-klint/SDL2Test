@@ -1,11 +1,11 @@
 #include <iostream>
 #include <SDL.h>
-#include "SDL2_RAII.h"
 #include <vector>
+#include <sstream>
+#include "SDL2_RAII.h"
 #include "Utils.h"
 #include "Controls.h"
 #include "Renderings.h"
-#include <sstream>
 
 
 int main(int argc, char* argv[])
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 				<< player.radius << u8" instead.";
 
 			SDL_ShowSimpleMessageBox(
-				SDL_MessageBoxFlags::SDL_MESSAGEBOX_ERROR,
+				SDL_MessageBoxFlags::SDL_MESSAGEBOX_WARNING,
 				u8"Virheilmoitus",
 				formatter.str().c_str(),
 				window);
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 				<< u8"Please use a non negative number next time.";
 
 			SDL_ShowSimpleMessageBox(
-				SDL_MessageBoxFlags::SDL_MESSAGEBOX_ERROR,
+				SDL_MessageBoxFlags::SDL_MESSAGEBOX_WARNING,
 				u8"Virheilmoitus",
 				formatter.str().c_str(),
 				window);

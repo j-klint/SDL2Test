@@ -1,7 +1,6 @@
 #pragma once
 #include <SDL.h>
 #include <vector>
-//#include "Renderings.h"
 
 struct MoveCommand
 {
@@ -11,12 +10,13 @@ struct MoveCommand
 
 struct Wall;
 
-struct Player
+class Player
 {
+public:
 	SDL_FPoint pos;
 	float dir;
 	int NoseLength{ 10 };
-	float radius{ 4 };
+	float radius{ 4.5f };
 
 	Player(float x, float y, float d);
 
@@ -24,7 +24,7 @@ struct Player
 		MoveCommand cmd,
 		const std::vector<Wall>& walls,
 		float speed = 0.63f,
-		float turnRate = 0.032f
+		float turnRate = 0.03f
 	);
 private:
 	SDL_FPoint Collide(SDL_FPoint attempt, const std::vector<Wall>& walls);

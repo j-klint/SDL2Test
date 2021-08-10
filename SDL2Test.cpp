@@ -7,6 +7,7 @@
 #include "Controls.h"
 #include "Renderings.h"
 
+void ParseCommandLine(Player& player, const char* argv1, SDL_Window* window = nullptr);
 
 int main(int argc, char* argv[])
 {
@@ -22,44 +23,13 @@ int main(int argc, char* argv[])
 	walls.push_back(Wall{ 100, 150, 200, 150, SDL_Color{0xff, 0xff, 0x00, 0xff} });
 	walls.push_back(Wall{ 200, 150, 200, 100, SDL_Color{0xff, 0x00, 0x00, 0xff} });
 	walls.push_back(Wall{ 200, 100, 250, 100, SDL_Color{0x00, 0xff, 0x00, 0xff} });
+	walls.push_back(Wall{ 250, 150, 290, 110, SDL_Color{0xff, 0x70, 0x00, 0xff} });
+	walls.push_back(Wall{ 250, 100, 250, 150, SDL_Color{0x30, 0x30, 0xff, 0xff} });
 
-	Player player{ 150.f, 250.f, PI/2 };
+	Player player{ 205.f, 250.f, PI/2 };
 	if ( argc > 1 )
 	{
-		float inputRadius{ player.radius };
-		try
-		{
-			inputRadius = std::stof(argv[1]);
-		}
-		catch ( ... )
-		{
-			std::ostringstream formatter;
-			formatter << u8"Couldn't parse command line parameter for player radius.\n\n"
-				<< u8"Will use default value of "
-				<< player.radius << u8" instead.";
-
-			SDL_ShowSimpleMessageBox(
-				SDL_MessageBoxFlags::SDL_MESSAGEBOX_WARNING,
-				u8"Virheilmoitus",
-				formatter.str().c_str(),
-				window);
-		}
-		if (inputRadius >= 0 )
-			player.radius = inputRadius;
-		else
-		{
-			std::ostringstream formatter;
-			formatter << u8"Command line parameter for player radius is silly.\n\n"
-				<< u8"Will use default value of "
-				<< player.radius << u8" instead.\n\n"
-				<< u8"Please use a non negative number next time.";
-
-			SDL_ShowSimpleMessageBox(
-				SDL_MessageBoxFlags::SDL_MESSAGEBOX_WARNING,
-				u8"Virheilmoitus",
-				formatter.str().c_str(),
-				window);
-		}
+		ParseCommandLine(player, argv[1]);
 	}
 
 
@@ -109,4 +79,44 @@ int main(int argc, char* argv[])
 	}
 	
 	return 0;
+}
+
+
+void ParseCommandLine(Player& player, const char* argv1, SDL_Window* window)
+{
+	float inputRadius{ player.radius };
+	try
+	{
+		inputRadius = std::stof(argv1);
+	}
+	catch ( ... )
+	{
+		std::ostringstream formatter;
+		formatter << u8"Couldn't parse command line parameter for player radius.\n\n"
+			<< u8"Will use default value of "
+			<< player.radius << u8" instead.";
+
+		SDL_ShowSimpleMessageBox(
+			SDL_MessageBoxFlags::SDL_MESSAGEBOX_WARNING,
+			u8"Virheilmoitus",
+			formatter.str().c_str(),
+			window);
+	}
+
+	if ( inputRadius >= 0 )
+		player.radius = inputRadius;
+	else
+	{
+		std::ostringstream formatter;
+		formatter << u8"Command line parameter for player radius is silly.\n\n"
+			<< u8"Will use default value of "
+			<< player.radius << u8" instead.\n\n"
+			<< u8"Please use a non negative number next time.";
+
+		SDL_ShowSimpleMessageBox(
+			SDL_MessageBoxFlags::SDL_MESSAGEBOX_WARNING,
+			u8"Virheilmoitus",
+			formatter.str().c_str(),
+			window);
+	}
 }

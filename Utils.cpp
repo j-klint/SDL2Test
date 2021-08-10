@@ -7,13 +7,6 @@ SDL_FPoint& operator*=(SDL_FPoint& p, float f)
 	return p;
 }
 
-/*SDL_FPoint& operator*=(float f, SDL_FPoint& p)
-{
-	p.x *= f;
-	p.y *= f;
-	return p;
-}*/
-
 SDL_FPoint& operator-=(SDL_FPoint& p1, const SDL_FPoint& p2)
 {
 	p1.x -= p2.x;
@@ -28,7 +21,7 @@ SDL_FPoint& operator+=(SDL_FPoint& p1, const SDL_FPoint& p2)
 	return p1;
 }
 
-void Normalize(SDL_FPoint& p) { p *= 1 / std::sqrt(dot(p, p)); }
+void Normalize(SDL_FPoint& p) { p *= 1 / Norm(p); }
 
 float Norm(const SDL_FPoint& p)
 {

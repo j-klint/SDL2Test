@@ -5,7 +5,6 @@
 #include "Utils.h"
 
 static std::vector<Collision> Collisions(6);
-static std::vector<Collision*> CollPtrs(6);
 
 Wall::Wall(float x1, float y1, float x2, float y2, SDL_Color clr)
 	:end1{ x1,y1 }, end2{ x2,y2 }, color{ clr } {}
@@ -62,7 +61,7 @@ void Gather_inputs(MoveCommand* moves)
 	}
 }
 
-void Player::Updatepos(MoveCommand cmd, const std::vector<Wall>& walls, float speed, float turnRate)
+void Player::Updatepos(const MoveCommand& cmd, const std::vector<Wall>& walls, float speed, float turnRate)
 {
 	if ( cmd.turbo && !cmd.slow )
 	{
@@ -107,34 +106,29 @@ void Player::Updatepos(MoveCommand cmd, const std::vector<Wall>& walls, float sp
 SDL_FPoint Player::Collide(SDL_FPoint step, const std::vector<Wall>& walls) const
 {
 	SDL_FPoint unstuckPos{ pos };
-	const float epsilon{ 0.001f };
+	const float epsilon{ 0.0001f };
 	const float bigRadius{ radius + epsilon };
 	const float bigRadiusSq{ bigRadius * bigRadius };
 	
 	while ( SphereCast(unstuckPos, SDL_FPoint{}, radius, walls, Collisions) )
 		for ( const auto& c : Collisions )
-			if ( c.distSq <= bigRadiusSq )
+			if ( c.distSq < bigRadiusSq )
 				unstuckPos += c.normal * (bigRadius - std::sqrt(c.distSq));
 
-	auto CollisionPtrCmp = [](Collision* a, Collision* b)
-	{
-		return a->t == b->t ? a->distSq < b->distSq : a->t < b->t;
-	};
-	
 	if ( SphereCast(unstuckPos, step, radius, walls, Collisions) )
 	{
-		CollPtrs.clear();
-		for ( auto& c : Collisions ) CollPtrs.push_back(&c);
-		Collision* c{ *std::min_element(CollPtrs.begin(), CollPtrs.end(), CollisionPtrCmp) };
+		auto CollisionCmp = [](const Collision& a, const Collision& b) -> bool
+		{
+			return a.t == b.t ? a.distSq < b.distSq : a.t < b.t;
+		};
 		
-		SDL_FPoint intermediate = unstuckPos + step * c->t + c->normal * epsilon;
+		const auto c = std::min_element(Collisions.begin(), Collisions.end(), CollisionCmp);
+		SDL_FPoint intermediate{ unstuckPos + step * c->t + c->normal * epsilon };
 		step = ((1.f - c->t) * dot(c->wallDir, step)) * c->wallDir;
 
 		if ( SphereCast(intermediate, step, radius, walls, Collisions) )
 		{
-			CollPtrs.clear();
-			for ( auto& c : Collisions ) CollPtrs.push_back(&c);
-			float t = (*std::min_element(CollPtrs.begin(), CollPtrs.end(), CollisionPtrCmp))->t;
+			const float t{ std::min_element(Collisions.begin(), Collisions.end(), CollisionCmp)->t };
 			intermediate += step * t;
 		}
 		else
@@ -157,7 +151,7 @@ bool SphereCast(
 {
 	auto pointCollision = [&castStart](const Wall* w, SDL_FPoint wallEnd, SDL_FPoint p, float t)->Collision
 	{
-		auto normal = Normalized(p - wallEnd);
+		SDL_FPoint normal{ Normalized(p - wallEnd) };
 		return Collision{ w, wallEnd, LeftFace(normal), normal, t, Norm2(p - castStart) };
 	};
 
@@ -186,15 +180,15 @@ bool SphereCast(
 
 		// Check for the line itself at start pos
 
+		const SDL_FPoint castStartRelToWall{ castStart - w.end1 };
 		SDL_FPoint wallDir{ w.end2 - w.end1 };
+		const SDL_FPoint wallNormal{ Normalized(PerpTowards(castStartRelToWall, wallDir)) };
 		float wallLen = Norm(wallDir);
 		wallDir *= 1 / wallLen;
-		SDL_FPoint startRelToWall{ castStart - w.end1 };
-		SDL_FPoint wallNormal{ Normalized(PerpTowards(startRelToWall, wallDir)) };
-		float startProj = dot(wallNormal, startRelToWall);
+		float startProj = dot(wallNormal, castStartRelToWall);
 		if ( -radius <= startProj && startProj <= radius )
 		{
-			float wallPortion = dot(wallDir, startRelToWall);
+			float wallPortion = dot(wallDir, castStartRelToWall);
 			if ( 0 <= wallPortion && wallPortion <= wallLen )
 			{
 				SDL_FPoint contact = w.end1 + wallDir * wallPortion;
@@ -220,13 +214,13 @@ bool SphereCast(
 
 		if ( -radius <= crossrange1 && crossrange1 <= radius )
 		{
-			float downRange = dot(end1rel, step) / stepLen;
+			const float downRange = dot(end1rel, step) / stepLen;
 			if ( (0 <= downRange && downRange <= stepLen) || Norm2(end1rel - step) <= radiusSq )
 			{
-				float sin = crossrange1 / radius;
-				float cos = std::sqrt(1 - sin * sin);
-				float t = (downRange - cos * radius) / stepLen;
-				auto point = castStart + t * step;
+				const float sin = crossrange1 / radius;
+				const float cos = std::sqrt(1 - sin * sin);
+				const float t = (downRange - cos * radius) / stepLen;
+				const auto point = castStart + t * step;
 				//auto point = castStart;
 				results.push_back(pointCollision(&w, w.end1, point, t));
 			}
@@ -234,13 +228,13 @@ bool SphereCast(
 
 		if ( -radius <= crossrange2 && crossrange2 <= radius )
 		{
-			float downRange = dot(end2rel, step) / stepLen;
+			const float downRange = dot(end2rel, step) / stepLen;
 			if ( (0 <= downRange && downRange <= stepLen) || Norm2(end2rel - step) <= radiusSq )
 			{
-				float sin = crossrange2 / radius;
-				float cos = std::sqrt(1 - sin * sin);
-				float t = (downRange - cos * radius) / stepLen;
-				auto point = castStart + t * step;
+				const float sin = crossrange2 / radius;
+				const float cos = std::sqrt(1 - sin * sin);
+				const float t = (downRange - cos * radius) / stepLen;
+				const auto point = castStart + t * step;
 				//auto point = castStart;
 				results.push_back(pointCollision(&w, w.end2, point, t));
 			}
@@ -249,15 +243,15 @@ bool SphereCast(
 
 		// Check for the line itself
 
-		float fullProj = dot(step, wallNormal);
-		float t = (radius - startProj) / fullProj;
+		const float fullProj = dot(step, wallNormal);
+		const float t = (radius - startProj) / fullProj;
 		if ( 0 <= t && t <= 1 )
 		{
-			SDL_FPoint center = castStart + t * step;
-			float wallPortion = dot(wallDir, center - w.end1);
+			const SDL_FPoint center = castStart + t * step;
+			const float wallPortion = dot(wallDir, center - w.end1);
 			if ( 0 <= wallPortion && wallPortion <= wallLen )
 			{
-				SDL_FPoint contact = w.end1 + wallDir * wallPortion;
+				const SDL_FPoint contact = w.end1 + wallDir * wallPortion;
 				results.emplace_back(&w, contact, wallDir, wallNormal, t, Norm2(castStart - contact));
 			}
 		}

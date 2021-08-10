@@ -22,13 +22,13 @@ public:
 	SDL_FPoint pos;
 	float dir;
 	int NoseLength{ 10 };
-	float radius{ 13.0f };
+	float radius{ 4.0f };
 	//float radius{ 0.001f };
 
 	Player(float x, float y, float d);
 
 	void Updatepos(
-		MoveCommand cmd,
+		const MoveCommand& cmd,
 		const std::vector<Wall>& walls,
 		float speed = 0.63f,
 		float turnRate = 0.02f

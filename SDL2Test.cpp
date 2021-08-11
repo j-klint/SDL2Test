@@ -20,11 +20,11 @@ int main(int argc, char* argv[])
 	sdl::Renderer renderer{ window.CreateRenderer() };
 
 	std::vector<Wall> walls;
-	walls.push_back(Wall{ 100, 150, 200, 150, SDL_Color{0xff, 0xff, 0x00, 0xff} });
-	walls.push_back(Wall{ 200, 150, 200, 100, SDL_Color{0xff, 0x00, 0x00, 0xff} });
-	walls.push_back(Wall{ 200, 100, 250, 100, SDL_Color{0x00, 0xff, 0x00, 0xff} });
-	walls.push_back(Wall{ 250, 150, 290, 110, SDL_Color{0xff, 0x70, 0x00, 0xff} });
-	walls.push_back(Wall{ 250, 100, 250, 150, SDL_Color{0x30, 0x30, 0xff, 0xff} });
+	walls.emplace_back( 100.f, 150.f, 200.f, 150.f, SDL_Color{0xff, 0xff, 0x00, 0xff} );
+	walls.emplace_back( 200.f, 150.f, 200.f, 100.f, SDL_Color{0xff, 0x00, 0x00, 0xff} );
+	walls.emplace_back( 200.f, 100.f, 250.f, 100.f, SDL_Color{0x00, 0xff, 0x00, 0xff} );
+	walls.emplace_back( 250.f, 150.f, 290.f, 110.f, SDL_Color{0xff, 0x70, 0x00, 0xff} );
+	walls.emplace_back( 250.f, 100.f, 250.f, 150.f, SDL_Color{0x30, 0x30, 0xff, 0xff} );
 
 	Player player{ 205.f, 250.f, PI/2 };
 	if ( argc > 1 )

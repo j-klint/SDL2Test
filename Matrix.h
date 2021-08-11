@@ -21,7 +21,7 @@ public:
 	explicit constexpr Matrix(const std::initializer_list<const std::initializer_list<TElem> > L);
 	explicit constexpr Matrix(const std::initializer_list<TElem> elements);
 	template<typename T2> explicit constexpr Matrix(const Matrix<n, m, T2>& src);
-	explicit constexpr Matrix(const std::array<TElem, n* m>& elements);
+	explicit constexpr Matrix(const std::array<TElem, n*m>& elements);
 
 	constexpr size_t rows() const { return n; }
 	constexpr size_t height() const { return n; }
@@ -49,10 +49,10 @@ public:
 	constexpr bool operator!=(const Matrix& r) const;
 
 	constexpr SDL_FPoint operator()(const SDL_FPoint&) const;
-
+	
 private:
+	template<size_t n2, size_t m2, typename T2> friend class Matrix;
 	TElem data[n][m]{};
-	friend class Matrix;
 #ifndef NDEBUG
 	constexpr void BoundsCheck(size_t i, size_t j) const;
 #endif
@@ -239,7 +239,7 @@ constexpr auto Matrix<n, m, TElem>::operator*(const Matrix<m, p, TElem>& other) 
 template<size_t n, size_t m, typename TElem>
 auto& Matrix<n, m, TElem>::operator*=(const Matrix& other)
 {
-	static_assert(n == m, "operator*= only for square matrixes");
+	static_assert(n == m, "operator*=(Matrix) only for square matrixes");
 	Matrix<n, n, TElem> copy = *this;
 	Matrix<n, n, TElem>& rhs = (this == &other) ? copy : other;
 	for ( size_t i = 0; i < n; i++ )

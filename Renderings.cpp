@@ -58,6 +58,7 @@ void RenderWalls3D(
 			e[0] = IntersectionPoint(e[0], e[1], testvec); break;
 		case IntersectType::second_out:
 			e[1] = IntersectionPoint(e[0], e[1], testvec); break;
+		default: break;
 		}
 
 		testvec = { -testvec.x, testvec.y };
@@ -69,6 +70,7 @@ void RenderWalls3D(
 			e[0] = IntersectionPoint(e[0], e[1], testvec); break;
 		case IntersectType::second_out:
 			e[1] = IntersectionPoint(e[0], e[1], testvec); break;
+		default: break;
 		}
 
 		renderer.SetRenderDrawColor(w.color);
@@ -110,6 +112,6 @@ void RenderPlayer(SDL_Renderer* renderer, const Player& player, bool absolute)
 	);
 
 	SDL_SetRenderDrawColor(renderer, 230, 230, 230, 255);
-	SDL_Rect plrrect{ pos.x - 1, pos.y - 1, 3, 3 };
+	SDL_Rect plrrect{ static_cast<int>(pos.x) - 1, static_cast<int>(pos.y) - 1, 3, 3 };
 	SDL_RenderFillRect(renderer, &plrrect);
 }

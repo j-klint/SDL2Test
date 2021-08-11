@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2Test", "SDL2Test.vcxpro
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		clang|x64 = clang|x64
+		clang|x86 = clang|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69C76298-D1E6-45BC-99D6-8BCE9774BB9C}.clang|x64.ActiveCfg = clang|x64
+		{69C76298-D1E6-45BC-99D6-8BCE9774BB9C}.clang|x64.Build.0 = clang|x64
+		{69C76298-D1E6-45BC-99D6-8BCE9774BB9C}.clang|x86.ActiveCfg = clang|Win32
+		{69C76298-D1E6-45BC-99D6-8BCE9774BB9C}.clang|x86.Build.0 = clang|Win32
 		{69C76298-D1E6-45BC-99D6-8BCE9774BB9C}.Debug|x64.ActiveCfg = Debug|x64
 		{69C76298-D1E6-45BC-99D6-8BCE9774BB9C}.Debug|x64.Build.0 = Debug|x64
 		{69C76298-D1E6-45BC-99D6-8BCE9774BB9C}.Debug|x86.ActiveCfg = Debug|Win32

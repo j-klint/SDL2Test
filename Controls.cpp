@@ -192,7 +192,7 @@ bool SphereCast(
 			if ( 0 <= wallPortion && wallPortion <= wallLen )
 			{
 				SDL_FPoint contact = w.end1 + wallDir * wallPortion;
-				results.emplace_back(&w, contact, wallDir, wallNormal, 0, Norm2(castStart - contact));
+				results.emplace_back(&w, contact, wallDir, wallNormal, 0.f, Norm2(castStart - contact));
 			}
 		}
 		if ( stepLen == 0  )

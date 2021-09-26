@@ -156,33 +156,30 @@ bool SphereCast(
 	};
 
 	results.clear();
-	const float stepLen = Norm(step);
 	const float radiusSq = radius * radius;
+	const float stepLen = Norm(step);
+	const SDL_FPoint castNormal = LeftFace(step) / stepLen;
 
 	for ( const Wall& w : walls )
 	{
-		const SDL_FPoint end1rel = w.end1-castStart;
-		const SDL_FPoint end2rel = w.end2-castStart;
+		const SDL_FPoint relEnds[2]{ w.end1 - castStart, w.end2 - castStart };
 
 		
 		// Check for endpoints from start position in any case
 		
-		if ( Norm2(end1rel) <= radiusSq )
-		{
+		if ( Norm2(relEnds[0]) <= radiusSq )
 			results.push_back(pointCollision(&w, w.end1, castStart, 0));
-		}
-		if ( Norm2(end2rel) <= radiusSq )
-		{
+
+		if ( Norm2(relEnds[1]) <= radiusSq )
 			results.push_back(pointCollision(&w, w.end2, castStart, 0));
-		}
 		
 
 		// Check for the line itself at start pos
 
-		const SDL_FPoint castStartRelToWall{ castStart - w.end1 };
+		const SDL_FPoint castStartRelToWall{ -relEnds[0] };
 		SDL_FPoint wallDir{ w.end2 - w.end1 };
 		const SDL_FPoint wallNormal{ Normalized(PerpTowards(castStartRelToWall, wallDir)) };
-		float wallLen = Norm(wallDir);
+		const float wallLen = Norm(wallDir);
 		wallDir *= 1 / wallLen;
 		float startProj = dot(wallNormal, castStartRelToWall);
 		if ( -radius <= startProj && startProj <= radius )
@@ -199,23 +196,21 @@ bool SphereCast(
 			continue; // With zero step, proceed no further
 		}
 
-		
 
-		// If step not zero and therefore 1/stepLen not NaN,
+		// If step not zero and therefore castNormal not NaN,
 		// finally cast the sphere forwards
 		
-		const SDL_FPoint castNormal = LeftFace(step) / stepLen;
-		const float crossrange[2]{ dot(end1rel, castNormal), dot(end2rel, castNormal) };
+		const float crossrange[2]{ dot(relEnds[0], castNormal), dot(relEnds[1], castNormal) };
 		if ( crossrange[0] > radius  && crossrange[1] > radius ) continue;
 		if ( crossrange[0] < -radius && crossrange[1] < -radius ) continue;
 
 
 		// Check for endpoints with non zero step
 		
-		const SDL_FPoint relEnds[2]{ end1rel, end2rel };
+		const SDL_FPoint ends[2]{ w.end1, w.end2 };
 		for ( int i = 0; i < 2; ++i )
 		{
-			if ( -radius <= crossrange[i] && crossrange[i] <= radius )
+			if ( -radius <= crossrange[i] && crossrange[i] <= radius && Norm2(relEnds[i]) >= radiusSq )
 			{
 				const float downRange = dot(relEnds[i], step) / stepLen;
 				if ( (0 <= downRange && downRange <= stepLen) || Norm2(relEnds[i] - step) <= radiusSq )
@@ -223,8 +218,11 @@ bool SphereCast(
 					const float sin = crossrange[i] / radius;
 					const float cos = std::sqrt(1 - sin * sin);
 					const float t = (downRange - cos * radius) / stepLen;
-					const auto point = castStart + t * step;
-					results.push_back(pointCollision(&w, w.end1, point, t));
+					//if ( t >= 0 )
+					//{
+						const auto point = castStart + t * step;
+						results.push_back(pointCollision(&w, ends[i], point, t));
+					//}
 				}
 			}
 		}

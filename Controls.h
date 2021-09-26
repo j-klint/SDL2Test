@@ -62,9 +62,9 @@ struct Collision
 
 
 bool SphereCast(
-	SDL_FPoint castStart,
-	SDL_FPoint step,
-	float radius,
+	const SDL_FPoint castStart,
+	const SDL_FPoint step,
+	const float radius,
 	const std::vector<Wall>& walls,
 	std::vector<Collision>& results
 );

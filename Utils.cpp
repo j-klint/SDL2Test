@@ -21,36 +21,36 @@ SDL_FPoint& operator+=(SDL_FPoint& p1, const SDL_FPoint& p2)
 	return p1;
 }
 
-void Normalize(SDL_FPoint& p) { p *= 1 / Norm(p); }
-
 float Norm(const SDL_FPoint& p)
 {
 	return std::sqrt(dot(p, p));
 }
 
+void Normalize(SDL_FPoint& p) { p *= 1.f / Norm(p); }
+
 SDL_FPoint Normalized(const SDL_FPoint& p)
 {
-	return (1 / Norm(p)) * p;
+	return (1.f / Norm(p)) * p;
 }
 
 Matrix<3, 3, float> Rotation(float angle)
 {
 	return Matrix<3, 3, float>{
-		{  std::cos(angle), std::sin(angle), 0 },
-		{ -std::sin(angle), std::cos(angle), 0 },
-		{                0,               0, 1 }
+		{  std::cos(angle), std::sin(angle), 0.f },
+		{ -std::sin(angle), std::cos(angle), 0.f },
+		{              0.f,             0.f, 1.f }
 	};
 }
 
 IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir)
 {
-	SDL_FPoint normal{ dir.x < 0 ? RightFace(dir) : LeftFace(dir) };
+	SDL_FPoint normal{ dir.x < 0.f ? RightFace(dir) : LeftFace(dir) };
 	float dot1 = dot(normal, a);
 	float dot2 = dot(normal, b);
 
-	if ( dot1 < 0 && dot2 > 0 ) return IntersectType::first_out;
-	if ( dot1 > 0 && dot2 < 0 ) return IntersectType::second_out;
-	if ( dot1 > 0 && dot2 > 0 ) return IntersectType::both_in;
+	if ( dot1 < 0.f && dot2 > 0.f ) return IntersectType::first_out;
+	if ( dot1 > 0.f && dot2 < 0.f ) return IntersectType::second_out;
+	if ( dot1 > 0.f && dot2 > 0.f ) return IntersectType::both_in;
 	return IntersectType::both_out;
 }
 

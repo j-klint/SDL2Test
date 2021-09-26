@@ -79,7 +79,7 @@ inline constexpr void Matrix<n, m, TElem>::BoundsCheck(size_t i, size_t j) const
 {
 	//assert(0 <= i && i < n);
 	//assert(0 <= j && j < m);
-	if ( i < 0 || i >= n || j < 0 || j >= n )
+	if ( i < 0 || i >= n || j < 0 || j >= m )
 		throw std::out_of_range("Array access with naughty indexes\n");
 }
 #endif
@@ -154,7 +154,7 @@ template<size_t n, size_t m, typename TElem>
 template<typename T2>
 inline constexpr Matrix<n, m, TElem>::Matrix(const Matrix<n, m, T2>& src)
 {
-	for ( int i = 0; i < n; i++ )
+	for ( size_t i = 0; i < n; i++ )
 		for ( size_t j = 0; j < m; j++ )
 			data[i][j] = static_cast<TElem>(src[i][j]);
 }
@@ -345,7 +345,6 @@ std::ostream& operator<<(std::ostream& out, const Matrix<n, m, T>& M)
 		}
 		out << " ]\n";
 	}
-	//out << "\n";
 	return out;
 }
 
@@ -375,6 +374,5 @@ std::ostream& operator<<(std::ostream& out, const Matrix<n, m, int>& M)
 		}
 		out << " ]\n";
 	}
-	//out << "\n";
 	return out;
 }

@@ -49,6 +49,12 @@ namespace sdl
 	Renderer Window::CreateRenderer(int index, Uint32 flags)
 	{
 		return Renderer{ this->ptr, index, flags };
+		//SDL_Renderer* temp{ SDL_CreateRenderer(ptr, index, flags) };
+		//if ( !ptr )
+		//	throw std::runtime_error{
+		//		std::string{"Couldn't create Renderer:\nSDL Error:\n"} + SDL_GetError()
+		//};
+		//return temp;
 	}
 
 
@@ -72,7 +78,7 @@ namespace sdl
 		{
 			SDL_DestroyRenderer(ptr);
 #ifndef NDEBUG
-			std::clog << "Renderer deleted\n";
+			std::clog << "Renderer destroyed\n";
 #endif
 		}
 	}

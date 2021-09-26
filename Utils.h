@@ -11,13 +11,13 @@ constexpr SDL_FPoint operator-(const SDL_FPoint& p) { return { -p.x, -p.y }; }
 SDL_FPoint& operator*=(SDL_FPoint& p, float f);
 SDL_FPoint& operator-=(SDL_FPoint& p1, const SDL_FPoint& p2);
 SDL_FPoint& operator+=(SDL_FPoint& p1, const SDL_FPoint& p2);
-void Normalize(SDL_FPoint& p);
 float Norm(const SDL_FPoint& p);
+void Normalize(SDL_FPoint& p);
 SDL_FPoint Normalized(const SDL_FPoint& p);
 constexpr float Norm2(const SDL_FPoint& p) { return dot(p, p); }
 constexpr SDL_FPoint operator*(float f, const SDL_FPoint& p) { return { p.x * f, p.y * f }; }
 constexpr SDL_FPoint operator*(const SDL_FPoint& p, float f) { return { p.x * f, p.y * f }; }
-constexpr SDL_FPoint operator/(const SDL_FPoint& p, float f) { return (1 / f) * p; }
+constexpr SDL_FPoint operator/(const SDL_FPoint& p, float f) { return (1.f / f) * p; }
 
 constexpr SDL_FPoint PerpTowards(SDL_FPoint point, SDL_FPoint fromVec)
 {
@@ -28,9 +28,9 @@ constexpr SDL_FPoint PerpTowards(SDL_FPoint point, SDL_FPoint fromVec)
 constexpr Matrix<3, 3, float> Translation(const SDL_FPoint& d)
 {
 	return Matrix<3, 3, float>{
-		{ 1, 0, d.x },
-		{ 0, 1, d.y },
-		{ 0, 0,   1 }
+		{ 1.f, 0.f, d.x },
+		{ 0.f, 1.f, d.y },
+		{ 0.f, 0.f, 1.f }
 	};
 }
 

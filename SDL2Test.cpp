@@ -7,6 +7,7 @@
 #include "Controls.h"
 #include "Renderings.h"
 
+
 void ParseCommandLine(Player& player, const char* argv1, SDL_Window* window = nullptr);
 
 int main(int argc, char* argv[])

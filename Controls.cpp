@@ -106,7 +106,7 @@ void Player::Updatepos(const MoveCommand& cmd, const std::vector<Wall>& walls, f
 SDL_FPoint Player::Collide(SDL_FPoint step, const std::vector<Wall>& walls) const
 {
 	SDL_FPoint unstuckPos{ pos };
-	const float epsilon{ 0.0001f };
+	static constexpr float epsilon{ 0.0001f };
 	const float bigRadius{ radius + epsilon };
 	const float bigRadiusSq{ bigRadius * bigRadius };
 	
@@ -143,9 +143,9 @@ SDL_FPoint Player::Collide(SDL_FPoint step, const std::vector<Wall>& walls) cons
 }
 
 bool SphereCast(
-	SDL_FPoint castStart,
-	SDL_FPoint step,
-	float radius,
+	const SDL_FPoint castStart,
+	const SDL_FPoint step,
+	const float radius,
 	const std::vector<Wall>& walls,
 	std::vector<Collision>& results)
 {
@@ -157,7 +157,6 @@ bool SphereCast(
 
 	results.clear();
 	const float stepLen = Norm(step);
-	const SDL_FPoint castNormal = LeftFace(step) / stepLen;
 	const float radiusSq = radius * radius;
 
 	for ( const Wall& w : walls )
@@ -201,45 +200,35 @@ bool SphereCast(
 		}
 
 		
-		// If step not zero and therefore castNormal not NaN,
+
+		// If step not zero and therefore 1/stepLen not NaN,
 		// finally cast the sphere forwards
 		
-		const float crossrange1 = dot(end1rel, castNormal);
-		const float crossrange2 = dot(end2rel, castNormal);
-		if ( crossrange1 > radius && crossrange2 > radius ) continue;
-		if ( crossrange1 < -radius && crossrange2 < -radius ) continue;
+		const SDL_FPoint castNormal = LeftFace(step) / stepLen;
+		const float crossrange[2]{ dot(end1rel, castNormal), dot(end2rel, castNormal) };
+		if ( crossrange[0] > radius  && crossrange[1] > radius ) continue;
+		if ( crossrange[0] < -radius && crossrange[1] < -radius ) continue;
 
 
 		// Check for endpoints with non zero step
-
-		if ( -radius <= crossrange1 && crossrange1 <= radius )
+		
+		const SDL_FPoint relEnds[2]{ end1rel, end2rel };
+		for ( int i = 0; i < 2; ++i )
 		{
-			const float downRange = dot(end1rel, step) / stepLen;
-			if ( (0 <= downRange && downRange <= stepLen) || Norm2(end1rel - step) <= radiusSq )
+			if ( -radius <= crossrange[i] && crossrange[i] <= radius )
 			{
-				const float sin = crossrange1 / radius;
-				const float cos = std::sqrt(1 - sin * sin);
-				const float t = (downRange - cos * radius) / stepLen;
-				const auto point = castStart + t * step;
-				//auto point = castStart;
-				results.push_back(pointCollision(&w, w.end1, point, t));
+				const float downRange = dot(relEnds[i], step) / stepLen;
+				if ( (0 <= downRange && downRange <= stepLen) || Norm2(relEnds[i] - step) <= radiusSq )
+				{
+					const float sin = crossrange[i] / radius;
+					const float cos = std::sqrt(1 - sin * sin);
+					const float t = (downRange - cos * radius) / stepLen;
+					const auto point = castStart + t * step;
+					results.push_back(pointCollision(&w, w.end1, point, t));
+				}
 			}
 		}
-
-		if ( -radius <= crossrange2 && crossrange2 <= radius )
-		{
-			const float downRange = dot(end2rel, step) / stepLen;
-			if ( (0 <= downRange && downRange <= stepLen) || Norm2(end2rel - step) <= radiusSq )
-			{
-				const float sin = crossrange2 / radius;
-				const float cos = std::sqrt(1 - sin * sin);
-				const float t = (downRange - cos * radius) / stepLen;
-				const auto point = castStart + t * step;
-				//auto point = castStart;
-				results.push_back(pointCollision(&w, w.end2, point, t));
-			}
-		}
-
+		
 
 		// Check for the line itself
 

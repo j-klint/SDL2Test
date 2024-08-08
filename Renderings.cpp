@@ -104,11 +104,11 @@ void RenderPlayer(SDL_Renderer* renderer, const Player& player, bool absolute)
 		dir = PI/2;
 	}
 
-	SDL_RenderDrawLine(
-		renderer,
-		pos.x, pos.y,
-		pos.x + std::cos(dir) * player.NoseLength,
-		pos.y - std::sin(dir) * player.NoseLength
+	SDL_RenderDrawLine(renderer,
+	                   static_cast<int>(pos.x),
+	                   static_cast<int>(pos.y),
+	                   static_cast<int>(pos.x + std::cos(dir) * player.NoseLength),
+	                   static_cast<int>(pos.y - std::sin(dir) * player.NoseLength)
 	);
 
 	SDL_SetRenderDrawColor(renderer, 230, 230, 230, 255);

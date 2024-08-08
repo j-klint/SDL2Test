@@ -1,0 +1,60 @@
+{
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: cl.exe käännä ohjelma",
+			"command": "cl.exe",
+			"args": [
+				"/permissive-",
+				"/Qvec-report:1",
+				"/I\"${workspaceFolder}\\..\\SDL2-2.0.14\\include\"",
+				"/W4",
+				"/std:c++17",
+				"/EHsc", // enable exceptions?
+				"/nologo",
+				"/Fe${workspaceFolder}\\built\\sdl2demo.exe",
+				"${workspaceFolder}\\*.cpp",
+				// "/favor:INTEL64",
+				"/arch:AVX2",
+				"/GR-", // disable C++ RTTI
+				"/O2",  // optimize for speed
+				"/GL",  // "Whole program optimization"
+				"/Gw",  // Optimize Global Data
+				"/MT",  // link with LIBCMT.LIB
+				"/DNDEBUG", // #define NDEBUG, ks. c_cpp_properties.json
+				// "/MTd", //MTd link with LIBCMTD.LIB debug lib
+				// "/Zi",  //enable debug
+				"/link",
+				// "/DEBUG",
+				"/LTCG", // Link-time code generation /GL'n kanssa
+				"/LIBPATH:\"${workspaceFolder}\\..\\SDL2-2.0.14\\lib\\x64\"",
+				"SDL2.lib",
+				"SDL2main.lib",
+				"shell32.lib",
+				"/SUBSYSTEM:WINDOWS"
+				// "/SUBSYSTEM:CONSOLE"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}\\built"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build",
+		},
+		{
+			"label": "Kopio SDL2.dll",
+			"group": "build",
+			"type": "shell",
+			"command": "copy",
+			"args": [
+				"${workspaceFolder}\\..\\SDL2-2.0.14\\lib\\x64\\SDL2.dll",
+				"-Destination",
+				"${workspaceFolder}\\built\\SDL2.dll"
+			],
+			"dependsOn": "C/C++: cl.exe käännä ohjelma",
+			"dependsOrder": "sequence"
+		}
+	],
+	"version": "2.0.0"
+}

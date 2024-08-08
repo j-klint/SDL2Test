@@ -80,7 +80,7 @@ namespace sdl
 	{
 		SDL_Surface* ptr{ nullptr };
 	public:
-		Surface(const Renderer&) = delete;
+		Surface(const Surface&) = delete;
 		Surface& operator=(const Surface&) = delete;
 
 		~Surface();

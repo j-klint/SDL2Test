@@ -7,7 +7,7 @@
 			"args": [
 				"/permissive-",
 				"/Qvec-report:1",
-				"/I\"${workspaceFolder}\\..\\SDL2-2.0.14\\include\"",
+				"/I\"${workspaceFolder}\\..\\SDL2\\include\"",
 				"/W4",
 				"/std:c++17",
 				"/EHsc", // enable exceptions?
@@ -27,7 +27,7 @@
 				"/link",
 				// "/DEBUG",
 				"/LTCG", // Link-time code generation /GL'n kanssa
-				"/LIBPATH:\"${workspaceFolder}\\..\\SDL2-2.0.14\\lib\\x64\"",
+				"/LIBPATH:\"${workspaceFolder}\\..\\SDL2\\lib\\x64\"",
 				"SDL2.lib",
 				"SDL2main.lib",
 				"shell32.lib",
@@ -48,7 +48,7 @@
 			"type": "shell",
 			"command": "copy",
 			"args": [
-				"${workspaceFolder}\\..\\SDL2-2.0.14\\lib\\x64\\SDL2.dll",
+				"${workspaceFolder}\\..\\SDL2\\lib\\x64\\SDL2.dll",
 				"-Destination",
 				"${workspaceFolder}\\built\\SDL2.dll"
 			],

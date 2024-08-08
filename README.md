@@ -1,11 +1,14 @@
 # SDL2:n testailua
 
-##*Alustava versio. Toivon mukaan paranee tulevaisuudessa*
+*Alustava versio. Toivon mukaan paranee tulevaisuudessa*
+
+----------------------
+
 
 Kirjoittelin suunnilleen tämmöisen n. v. 2021, vähän sen jälkeen, kun olin
 aloittanut C++:n opettelun.
 
-Olin lukenut huhuja, että SDL2 olisi kelpo grafiikkakirjasto, jos C++:lla
+Olin lukenut huhuja, että [SDL2](https://www.libsdl.org/) olisi kelpo grafiikkakirjasto, jos C++:lla
 haluaa grafiikoita tehdä, siispä päätin sitä kokeilla.
 
 Olin katsellut yhtä Bisqwitin

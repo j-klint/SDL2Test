@@ -43,7 +43,7 @@
 			"group": "build",
 		},
 		{
-			"label": "Kopio SDL2.dll",
+			"label": "Kopioi SDL2.dll",
 			"group": "build",
 			"type": "shell",
 			"command": "copy",

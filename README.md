@@ -1,22 +1,95 @@
 # SDL2:n testailua
 
-## Käyttöohjeita (Windows)
+Tämä on harjoitustyö, jossa testailin [SDL2:ta](https://libsdl.org/) sekä
+matriisien käyttökelpoisuutta translaatioiden hoitamisessa pelkkien
+lineaarikuvausten lisäksi, sekä myös joitain 2-ulotteisia törmäyksenhoksaus
+ja -hoitelukonsteja.
 
-Ensinnä pitää olla VSCoden ja C/C++-lisäkkeen lisäksi [kääntäjä asennettuna
-sopivasti](https://code.visualstudio.com/docs/cpp/config-msvc). Eli VSCode
-pitää käynnistää tuon *x64 Native Tools Command Prompt* -batin kautta, jotta
-kääntäjän polku sun muut menisivät oikein.
+`WASD`:illa voi siirrellä "pelaajahahmoa", `Q`:lla ja `E`:llä käännellä ja
+`Shift` ja `Ctrl` ovat turbo- ja hitailunapit. Liikkeet näkyvät mukamas
+kolmesta eri kuvakulmasta.
 
-Lisäksi pitää [SDL2](https://github.com/libsdl-org/SDL/releases/latest) olla
-asennettuna tämän viereiseen hakemistoon. Ainakin minulla toimi, kun kopioin
-tuon
-[`SDL2-devel-2.30.6-VC.zip`](https://github.com/libsdl-org/SDL/releases/download/release-2.30.6/SDL2-devel-2.30.6-VC.zip)-paketin
-sisällä olleen hakemiston sisällön hakemistoon `..\SDL2`. Siis niin, että
-tiedostojen paikat täsmäävät tiedostoissa `.vscode\tasks.json` ja
-`.vscode\c_cpp_properties.json` esiintyvien polkujen kanssa.
+Suuri inspiraatio tähän oli [juutuubaaja Bisqwit](https://www.youtube.com/@Bisqwit). Enemmän
+taustatarinaa tälle räpellykselleni löytynee tuolta [Tarinointia-osiosta](#tarinointia).
 
-Sitten pitäisi kääntyä VSCodessa tuolla *build taskilla* `Kopioi SDL2.dll`,
-jonka pitäisi kutsua myös varsinainen kääntämiskomento.
+
+## Käyttöohjeita
+
+tl;dr: Kloonatkaa repo, katsokaa, että SDL2 on kondiksessa, kääntäkää ja
+linkatkaa `*.cpp`.
+
+Tämä ompi VSCode-projekti, ja koska VSCodessa ei tule kääntäjää mukana, niin
+sellainen on asennettava muualta. Seuraavassa vinkkejä.
+
+### Windows
+
+1. **Asenna kääntäjä ja tarpeellinen Windows SDK.**
+
+    Olin sen verran laiska, että kun kerran minulla Visual Studio oli jo
+    asennettuna, niin en viitsinyt sen lisäksi ruveta Windowsille enempiä
+    kääntäjiä asentelemaan. Tässä neuvoja, kuinka MSVC-kääntäjän saanee
+    toimimaan VSCoden kanssa. Se saattaa vaatia vähän jippoja. Tässä
+    viralliset neuvot:
+
+    <https://code.visualstudio.com/docs/cpp/config-msvc>
+
+    Ja niille, jotka ovat vielä laiskempia kuin minä, tässä on vielä sama
+    suomeksi tavattuna:
+
+    * Jos on jo Visual Studio asennettuna, niin valitse sieltä Visual Studio
+      Installerista "Desktop development with C++".
+
+    * Jos ei ole eikä tahdo koko Visual Studiota asentaa, niin
+      [downloads-sivulta](https://visualstudio.microsoft.com/downloads/#remote-tools-for-visual-studio-2022)
+      löytyy tuommoinen kuin "Build Tools for Visual Studio 2022". Sillä saa
+      toivon mukaan tarvittavat osat asennettua ilman Visual Studiota
+
+    * Joka tapauksessa komponentit, jotka vähintäänkin olisi asennettava,
+      ovat *MSVC blaablaablaa*, jossa on `cl.exe`-kääntäjä mukana, sekä
+      *Windows blaa SDK (blaablaa)*, jossa on mukana Windows-ohjelmille
+      tuikitärkeitä headereitä ja kirjastoja yms.
+
+    Joka ei halua MSVC:n kanssa ruveta leikkimään, voi vaikka yrittää käyttää
+    MingW:tä, mutta sille en ole tehnyt VSCode-projektiin asetuksia, joten se
+    jää itse tehtäväksi.
+
+1. **"Asenna" [SDL2](https://libsdl.org/) tämän projektin viereiseen
+hakemistoon.**
+
+    * Uusin versio: <https://github.com/libsdl-org/SDL/releases/latest>
+
+        * Noista kannattaa valita paketti
+          [`SDL2-devel-*-VC.zip`](https://github.com/libsdl-org/SDL/releases/download/release-2.30.6/SDL2-devel-2.30.6-VC.zip)
+          tms.
+
+    * Kopioi puretun paketin sisällä olleen hakemiston sisältö tämän
+      projektin viereiseen `SDL2`-nimiseen hakemistoon. Eli suhteellisena
+      polkuna `..\SDL2`:een.
+
+    * Jos edellinen kohta oli liian epäselvästi sanottu, niin voit varmistaa,
+      että SDL2-tiedostojen sijainnit vastaavat `.vscode\tasks.json` ja
+      `.vscode\c_cpp_properties.json` -tiedostoissa määriteltyjä polkuja.
+
+1. **Käännä sovellus.**
+
+    * Jos käytät MSVC:tä, niin käynnistä VSCode ensin käynnistämällä *x64 Native Tools Command Prompt* -komentokehote (löytyy Windowsin starttimenusta) ja sitten VSCode sen *Command Promptin* kautta. Tämä varmistaa, että kääntäjän polut ym. ovat oikein.
+
+    * Valitse VSCoden “Tasks”-näkymä (`Ctrl + Shift + B`).
+
+    * Etsi ja valitse `Kopioi SDL2.dll` -tehtävä. Tämän pitäisi ensin kääntää
+      ohjelma ja sitten kopioda vaadittava dll samaan hakemistoon exe:n kanssa.
+
+1. **exe-tiedoston pitäisi nyt löytyä `built`-alihakemistosta**.
+
+
+### GNU/Linux
+
+Sorry. Kirjoitin tämän alunperin Windowsissa enkä ole vielä saanut
+Linux-porttia aikaiseksi. Suunnitelmissa kyllä on.
+
+Tämänhetkinen ounasteluni on, että kunhan (Ubuntussa / Debianissa / tms.:ssä)
+asentaa `libsdl2-dev`-paketin ja korjaa include-pathit jne., niin pitäisi
+toimia ihan sillä vain, että kääntää ja linkkaa kaikki `*.cpp`:t.
 
 
 ## Tarinointia
@@ -25,35 +98,34 @@ Kirjoittelin suunnilleen tämmöisen n. v. 2021, vähän sen jälkeen, kun olin
 aloittanut C++:n opettelun.
 
 Olin lukenut huhuja, että [SDL2](https://www.libsdl.org/) olisi kelpo
-grafiikkakirjasto, jos C++:lla haluaa grafiikoita tehdä, siispä päätin sitä
+grafiikkakirjasto, jos C++:lla haluaa grafiikoita tehdä. Siispä päätin sitä
 kokeilla.
 
 Olin katsellut yhtä Bisqwitin
-[grafiikkaohjelmointivideota](https://youtu.be/HQYsFshbkYw?t=82), jonka
-alussa hän selittää eri koordinaatistoista tai joistain sinne päin.
-Ajattelin, että tuollainen pikku esittely, jossa on *wireframet* kolmesta eri
-kuvakulmasta, varmaan olisi hauska ja melko nopeakin tehdä. Siispä yritin
-niin tehdä.
+[grafiikkaohjelmointivideota](https://youtu.be/HQYsFshbkYw?t=82), jonka alussa
+hän selittää eri koordinaatistoista tai joistain sinne päin. Ajattelin, että
+tuollainen pikku esittely, jossa on *wireframet* kolmesta eri kuvakulmasta,
+varmaan olisi hauska ja melko nopeakin tehdä. Siispä yritin niin tehdä.
 
 Olin lisäksi vast'ikään kuullut sellaisen
 [huhun](https://www.youtube.com/watch?v=vQ60rFwh2ig), että
-(*n+1*)-ulotteisilla matriiseilla/lineaarikuvauksilla voitaisiin hoitaa
-*n*-ulotteisen avaruuden translaatiot ynnä lineaarikuvaukset.
-Lineaarialgebrastahan olin oppinut, että kaikki äärellisulotteisten
-avaruuksien lineaarikuvaukset voidaan hoitaa matriiseilla, ja
-lineaarikuvausten yhdistämiset niiden matriisien kertolaskuina. Mutta kun
-lineaarikuvaus esim. kuvaa aina origon origoksi, niin translaatio ei
-selvästikään voi olla lineaarikuvaus. Opin sitten, että kun otetaan
-(*n+1*)-ulotteinen lineaarikuvaus ja sen kuvat projisoidaan *n*:ään
-ulottuvuuteen, niin sillä on mahdollista hoidella myös *n*-ulotteinen
-translaatio, ja kuvausten yhdistäminen edelleen toimii mainiosti
-(*n+1*)-ulotteisten matriisien kertolaskuna.
+(*n+1*)-ulotteisilla matriiseilla voitaisiin hoitaa *n*-ulotteisen avaruuden
+translaatiot ynnä lineaarikuvaukset. Lineaarialgebrastahan olin oppinut, että
+kaikki äärellisulotteisten avaruuksien lineaarikuvaukset voidaan kyllä hoitaa
+matriiseilla, ja lineaarikuvausten yhdistämiset niiden matriisien
+kertolaskuina. Mutta kun lineaarikuvaus esim. kuvaa aina origon origoksi,
+niin translaatio ei selvästikään voi olla lineaarikuvaus. Opin sitten, että
+kun otetaan (*n+1*)-ulotteinen lineaarikuvaus ja sen kuvat projisoidaan
+*n*:ään ulottuvuuteen helpoimmalla mahdollisella tavalla, niin sillä on
+mahdollista hoidella myös *n*-ulotteinen translaatio, ja kuvausten
+yhdistäminen edelleen toimii mainiosti (*n+1*)-ulotteisten matriisien
+kertolaskuna.
 
-Sitä halusin testata. Havaintoni tästä harjoitustyöstä olivat, että hyvinpä
+Sitä halusin testata. Havaintoni tästä harjoitustyöstä oli, että hyvinpä
 näyttää tämä konsti toimivan ainakin tapauksessa *n*&nbsp;=&nbsp;2.
 
-Yhdelle kaverille kun esittelin, sanoi, että seuraavaksi [collision
-detection](https://en.wikipedia.org/wiki/Collision_detection). Ensimmäisenä
+Yhdelle kaverille kun esittelin, sanoi, että seuraavaksi
+["clipping"](https://en.wikipedia.org/wiki/Collision_detection). Ensimmäisenä
 ratkaisuideana minulle tuli mieleen, että kunhan liikkuvektori projisoidaan
 vastaantulevalle seinälle jne., niin sillä hyvä, eli vähän sama idea kuin
 [itse Bisqwitillä](https://www.youtube.com/watch?v=HQYsFshbkYw&t=997s). Mutta

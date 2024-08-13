@@ -1,6 +1,11 @@
 #pragma once
-#include <SDL.h>
 #include <vector>
+
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif //  _WIN32
 
 struct MoveCommand
 {

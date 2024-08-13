@@ -1,9 +1,14 @@
 #pragma once
-#include <SDL.h>
 #include <vector>
 #include "SDL2_RAII.h"
 #include "Controls.h"
 #include "Matrix.h"
+
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif //  _WIN32
 
 
 

@@ -1,49 +1,62 @@
 {
 	"tasks": [
 		{
-			"type": "cppbuild",
-			"label": "C/C++: cl.exe käännä ohjelma",
-			"command": "cl.exe",
-			"args": [
-				"/permissive-",
-				"/Qvec-report:1",
-				"/I\"${workspaceFolder}\\..\\SDL2\\include\"",
-				"/W4",
-				"/std:c++17",
-				"/EHsc", // enable exceptions?
-				"/nologo",
-				"/Fe${workspaceFolder}\\built\\sdl2demo.exe",
-				"${workspaceFolder}\\*.cpp",
-				// "/favor:INTEL64",
-				"/arch:AVX2",
-				"/GR-", // disable C++ RTTI
-				"/O2",  // optimize for speed
-				"/GL",  // "Whole program optimization"
-				"/Gw",  // Optimize Global Data
-				"/MT",  // link with LIBCMT.LIB
-				"/DNDEBUG", // #define NDEBUG, ks. c_cpp_properties.json
-				// "/MTd", //MTd link with LIBCMTD.LIB debug lib
-				// "/Zi",  //enable debug
-				"/link",
-				// "/DEBUG",
-				"/LTCG", // Link-time code generation /GL'n kanssa
-				"/LIBPATH:\"${workspaceFolder}\\..\\SDL2\\lib\\x64\"",
-				"SDL2.lib",
-				"SDL2main.lib",
-				"shell32.lib",
-				"/SUBSYSTEM:WINDOWS"
-				// "/SUBSYSTEM:CONSOLE"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}\\built"
-			},
-			"problemMatcher": [
-				"$msCompile"
-			],
 			"group": "build",
+			"label": "Käännä ohjelma",
+
+			"windows": {
+				"type": "cppbuild",
+				"label": "C/C++: cl.exe käännä ohjelma",
+				"command": "cl.exe",
+				"args": [
+					"/permissive-",
+					"/Qvec-report:1",
+					"/I\"${workspaceFolder}\\..\\SDL2\\include\"",
+					"/W4",
+					"/std:c++17",
+					"/EHsc", // enable exceptions?
+					"/nologo",
+					"/Fe${workspaceFolder}\\built\\sdl2demo.exe",
+					"${workspaceFolder}\\*.cpp",
+					// "/favor:INTEL64",
+					"/arch:AVX2",
+					"/GR-", // disable C++ RTTI
+					"/O2",  // optimize for speed
+					"/GL",  // "Whole program optimization"
+					"/Gw",  // Optimize Global Data
+					"/MT",  // link with LIBCMT.LIB
+					"/DNDEBUG", // #define NDEBUG, ks. c_cpp_properties.json
+					// "/MTd", //MTd link with LIBCMTD.LIB debug lib
+					// "/Zi",  //enable debug
+					"/link",
+					// "/DEBUG",
+					"/LTCG", // Link-time code generation /GL'n kanssa
+					"/LIBPATH:\"${workspaceFolder}\\..\\SDL2\\lib\\x64\"",
+					"SDL2.lib",
+					"SDL2main.lib",
+					"shell32.lib",
+					"/SUBSYSTEM:WINDOWS"
+					// "/SUBSYSTEM:CONSOLE"
+				],
+				"options": {
+					"cwd": "${workspaceFolder}\\built"
+				},
+				"problemMatcher": [
+					"$msCompile"
+				],
+			},
+
+			"linux": {
+				"label": "Compile the program with g++",
+				"type": "process",
+				"command": "${workspaceFolder}/.vscode/linuxbuild.bash",
+				"options": { "cwd": "${workspaceFolder}" },
+				"problemMatcher": [ "$gcc" ]
+			},
 		},
+
 		{
-			"label": "Kopioi SDL2.dll",
+			"label": "Kopioi SDL2.dll (Windows)",
 			"group": "build",
 			"type": "shell",
 			"command": "copy",

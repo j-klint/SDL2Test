@@ -18,7 +18,10 @@ void ParseCommandLine(Player& player, const char* argv1, SDL_Window* window = nu
 
 int main(int argc, char* argv[])
 {
-	std::cout << "main started\n";
+#ifndef NDEBUG
+	std::clog << "main started\n";
+#endif
+
 	constexpr int WIDTH = 1500;
 	constexpr int HEIGHT = WIDTH/3;
 	constexpr int SCREENS = 3;
@@ -87,7 +90,9 @@ int main(int argc, char* argv[])
 		renderer.RenderPresent();
 	}
 	
-	std::cout << "End\n";
+#ifndef NDEBUG
+	std::clog << "End\n";
+#endif
 	return 0;
 }
 

@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Utils.h"
 
 SDL_FPoint& operator*=(SDL_FPoint& p, float f)
@@ -35,17 +36,18 @@ SDL_FPoint Normalized(const SDL_FPoint& p)
 
 Matrix<3, 3, float> Rotation(float angle)
 {
+	float cos{ std::cos(angle) }, sin{ std::sin(angle) };
 	return Matrix<3, 3, float>{
-		{  std::cos(angle), std::sin(angle), 0.f },
-		{ -std::sin(angle), std::cos(angle), 0.f },
-		{              0.f,             0.f, 1.f }
+		{  cos, sin, 0.f },
+		{ -sin, cos, 0.f },
+		{  0.f, 0.f, 1.f }
 	};
 }
 
 SDL_FPoint operator*(const Matrix<3, 3, float>& Transform, const SDL_FPoint& pt)
 {
-	auto temp = Transform * Matrix<3, 1, float>{pt.x, pt.y, 1};
-	return { static_cast<float>(temp[0][0]), static_cast<float>(temp[1][0]) };
+	auto temp = Transform * Matrix<3, 1, float>{ pt.x, pt.y, 1.f };
+	return { temp[0][0], temp[1][0] };
 }
 
 IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir)

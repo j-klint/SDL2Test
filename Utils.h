@@ -1,5 +1,4 @@
 #pragma once
-#include <cmath>
 
 #ifdef _WIN32
 #include <SDL.h>
@@ -52,16 +51,16 @@ constexpr Matrix<3, 3, float> Translation(int dx, int dy)
 
 Matrix<3, 3, float> Rotation(float angle);
 
+SDL_FPoint operator*(const Matrix<3, 3, float>& Transform, const SDL_FPoint& pt);
+
 constexpr SDL_FPoint LeftFace(SDL_FPoint p) { return { p.y, -p.x }; };
 constexpr SDL_FPoint RightFace(SDL_FPoint p) { return { -p.y, p.x }; };
+
 
 enum struct IntersectType
 {
 	first_out, second_out, both_in, both_out
 };
-
-SDL_FPoint operator*(const Matrix<3, 3, float>& Transform, const SDL_FPoint& pt);
-
 
 IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir);
 

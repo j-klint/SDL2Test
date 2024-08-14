@@ -1,9 +1,4 @@
 #pragma once
-
-#include <stdexcept>
-#include <string>
-#include <iostream>
-
 #ifdef _WIN32
 #include <SDL.h>
 #else

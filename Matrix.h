@@ -5,7 +5,10 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <type_traits>
+
+// I don't remember what this was supposed to be for.
+// Seems to work fine without it.
+// #include <type_traits>
 
 #ifndef NDEBUG
 //#include <cassert>

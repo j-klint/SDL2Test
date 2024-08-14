@@ -1,3 +1,6 @@
+#include <stdexcept>
+#include <string>
+#include <iostream>
 #include "SDL2_RAII.h"
 
 namespace sdl

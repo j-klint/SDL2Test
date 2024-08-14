@@ -46,7 +46,6 @@ public:
 	auto& operator*=(const Matrix& other);
 	auto& operator*=(const TElem& scalar);
 	constexpr auto operator*(const TElem& scalar) const;
-	friend constexpr auto operator*(const TElem& scalar, const Matrix& matrix);
 
 	constexpr auto T() const;
 
@@ -62,6 +61,10 @@ private:
 	constexpr void BoundsCheck(size_t i, size_t j) const;
 #endif
 };
+
+// Höh. Eihän tämän tarvi olla friend.
+template<size_t n, size_t m, typename TElem>
+constexpr auto operator*(const TElem& scalar, const Matrix<n, m, TElem>& matrix);
 
 template<typename To, size_t n, size_t m, typename From>
 constexpr Matrix<n, m, To> Matrix_cast(const Matrix<n, m, From>& M);

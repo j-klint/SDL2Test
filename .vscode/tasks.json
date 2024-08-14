@@ -1,8 +1,37 @@
 {
 	"tasks": [
 		{
+			"label": "Tee hakemisto",
+			"windows": {
+				"group": "build",
+				"type": "shell",
+				"options": { "shell": { "executable": "powershell" } },
+				"command": "New-Item",
+				"args": [
+					"-Force",
+					"-ItemType",
+					"Directory",
+					"${workspaceFolder}\\built"
+				]
+			},
+			"linux": {
+				"group": "build",
+				"type": "process",
+				"options": { "shell": { "executable": "/bin/bash" } },
+				"command": "mkdir",
+				"args": [
+					"-p",
+					"${workspaceFolder}/built"
+				]
+			},
+			"detail": "Makes the built directory in case it doesn't exist yet."
+		},
+
+		{
 			"group": "build",
 			"label": "Käännä ohjelma",
+			"dependsOn": "Tee hakemisto",
+			"dependsOrder": "sequence",
 
 			"windows": {
 				"type": "cppbuild",
@@ -11,7 +40,8 @@
 				"args": [
 					"/permissive-",
 					"/Qvec-report:1",
-					"/I\"${workspaceFolder}\\..\\SDL2\\include\"",
+					"/I",
+					"${workspaceFolder}\\..\\SDL2\\include",
 					"/W4",
 					"/std:c++17",
 					"/EHsc", // enable exceptions?
@@ -31,19 +61,15 @@
 					"/link",
 					// "/DEBUG",
 					"/LTCG", // Link-time code generation /GL'n kanssa
-					"/LIBPATH:\"${workspaceFolder}\\..\\SDL2\\lib\\x64\"",
+					"/LIBPATH:${workspaceFolder}\\..\\SDL2\\lib\\x64",
 					"SDL2.lib",
 					"SDL2main.lib",
 					"shell32.lib",
 					"/SUBSYSTEM:WINDOWS"
 					// "/SUBSYSTEM:CONSOLE"
 				],
-				"options": {
-					"cwd": "${workspaceFolder}\\built"
-				},
-				"problemMatcher": [
-					"$msCompile"
-				],
+				"options": { "cwd": "${workspaceFolder}\\built" },
+				"problemMatcher": [ "$msCompile" ],
 			},
 
 			"linux": {
@@ -65,7 +91,7 @@
 				"-Destination",
 				"${workspaceFolder}\\built\\SDL2.dll"
 			],
-			"dependsOn": "C/C++: cl.exe käännä ohjelma",
+			"dependsOn": "Käännä ohjelma",
 			"dependsOrder": "sequence"
 		}
 	],

@@ -7,12 +7,6 @@
 #include <string>
 #include <type_traits>
 
-#ifdef _WIN32
-#include <SDL.h>
-#else
-#include <SDL2/SDL.h>
-#endif //  _WIN32
-
 #ifndef NDEBUG
 //#include <cassert>
 #include <stdexcept>
@@ -51,8 +45,6 @@ public:
 
 	constexpr bool operator==(const Matrix& r) const;
 	constexpr bool operator!=(const Matrix& r) const;
-
-	constexpr SDL_FPoint operator()(const SDL_FPoint&) const;
 	
 private:
 	template<size_t n2, size_t m2, typename T2> friend class Matrix;
@@ -280,12 +272,6 @@ constexpr auto Matrix<n, m, TElem>::operator*(const TElem& scalar) const
 }
 
 template<size_t n, size_t m, typename TElem>
-constexpr auto operator*(const TElem& scalar, const Matrix<n, m, TElem>& matrix)
-{
-	return matrix * scalar;
-}
-
-template<size_t n, size_t m, typename TElem>
 constexpr auto Matrix<n, m, TElem>::T() const
 {
 	Matrix<m, n, TElem> transpose{};
@@ -310,18 +296,16 @@ constexpr bool Matrix<n, m, TElem>::operator!=(const Matrix& r) const
 	return !(*this == r);
 }
 
-template<size_t n, size_t m, typename TElem>
-constexpr SDL_FPoint Matrix<n, m, TElem>::operator()(const SDL_FPoint& pt) const
-{
-	static_assert(n == 3 && m == 3);
-	static_assert(std::is_floating_point_v<TElem>);
-	auto temp = (*this) * Matrix<3, 1, TElem>{pt.x, pt.y, 1};
-	return { static_cast<float>(temp[0][0]), static_cast<float>(temp[1][0]) };
-}
 
 
 
 // Non-members
+
+template<size_t n, size_t m, typename TElem>
+constexpr auto operator*(const TElem& scalar, const Matrix<n, m, TElem>& matrix)
+{
+	return matrix * scalar;
+}
 
 template<typename To, size_t n, size_t m, typename From>
 constexpr Matrix<n, m, To> Matrix_cast(const Matrix<n, m, From>& M)

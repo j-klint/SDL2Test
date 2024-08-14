@@ -7,7 +7,9 @@ ja -hoitelukonsteja. Piirtelee ruudulle pikku rautalankahäkkyröitä.
 
 `W`&nbsp;`A`&nbsp;`S`&nbsp;`D`&nbsp;:illa voi siirrellä "pelaajahahmoa",
 `Q`:lla ja `E`:llä käännellä ja `Shift` sekä `Ctrl` ovat turbo- ja
-hitailunapit. Liikkeet näkyvät mukamas kolmesta eri kuvakulmasta.
+hitailunapit. Liikkeet näkyvät mukamas kolmesta eri kuvakulmasta. Command line
+-argumenttina voi syöttää törmäystarkistuksissa käytettävän pelaajahahmon
+säteen pikseleissä.
 
 Suuri inspiraatio tähän oli [juutuubaaja Bisqwit](https://www.youtube.com/@Bisqwit). Enemmän
 taustatarinaa tälle räpellykselleni löytynee tuolta [Tarinointia-osiosta](#tarinointia).

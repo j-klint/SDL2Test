@@ -1,5 +1,12 @@
 #pragma once
 #include <cmath>
+
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif //  _WIN32
+
 #include "Matrix.h"
 
 constexpr float PI = static_cast<float>(M_PI);
@@ -52,6 +59,9 @@ enum struct IntersectType
 {
 	first_out, second_out, both_in, both_out
 };
+
+SDL_FPoint operator*(const Matrix<3, 3, float>& Transform, const SDL_FPoint& pt);
+
 
 IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir);
 

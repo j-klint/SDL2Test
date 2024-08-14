@@ -23,7 +23,7 @@ void RenderWalls2D(
 	for ( const auto& w : walls )
 	{
 		renderer.SetRenderDrawColor(w.color);
-		renderer.RenderDrawLineF(Tr(w.end1), Tr(w.end2));
+		renderer.RenderDrawLineF(Tr * w.end1, Tr * w.end2);
 	}
 }
 
@@ -47,7 +47,7 @@ void RenderWalls3D(
 
 	for ( const auto& w : walls )
 	{
-		SDL_FPoint e[2]{ ViewTransform(w.end1), ViewTransform(w.end2) };
+		SDL_FPoint e[2]{ ViewTransform * w.end1, ViewTransform * w.end2 };
 
 		SDL_FPoint testvec{ -1, -1 };
 		switch ( TestForIntersection(e[0], e[1], testvec) )

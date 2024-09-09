@@ -1,12 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-
-#ifdef _WIN32
 #include <SDL.h>
-#else
-#include <SDL2/SDL.h>
-#endif //  _WIN32
 
 #include "SDL2_RAII.h"
 #include "Utils.h"

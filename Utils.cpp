@@ -44,12 +44,6 @@ Matrix<3, 3, float> Rotation(float angle)
 	};
 }
 
-SDL_FPoint operator*(const Matrix<3, 3, float>& Transform, const SDL_FPoint& pt)
-{
-	auto temp = Transform * Matrix<3, 1, float>{ pt.x, pt.y, 1.f };
-	return { temp[0][0], temp[1][0] };
-}
-
 IntersectType TestForIntersection(const SDL_FPoint& a, const SDL_FPoint& b, const SDL_FPoint& dir)
 {
 	SDL_FPoint normal{ dir.x < 0.f ? RightFace(dir) : LeftFace(dir) };

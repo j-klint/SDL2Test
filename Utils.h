@@ -1,11 +1,5 @@
 #pragma once
-
-#ifdef _WIN32
 #include <SDL.h>
-#else
-#include <SDL2/SDL.h>
-#endif //  _WIN32
-
 #include "Matrix.h"
 
 constexpr float PI = static_cast<float>(M_PI);
@@ -51,10 +45,14 @@ constexpr Matrix<3, 3, float> Translation(int dx, int dy)
 
 Matrix<3, 3, float> Rotation(float angle);
 
-SDL_FPoint operator*(const Matrix<3, 3, float>& Transform, const SDL_FPoint& pt);
-
 constexpr SDL_FPoint LeftFace(SDL_FPoint p) { return { p.y, -p.x }; };
 constexpr SDL_FPoint RightFace(SDL_FPoint p) { return { -p.y, p.x }; };
+
+constexpr SDL_FPoint operator*(const Matrix<3, 3, float>& Transform, const SDL_FPoint pt)
+{
+	const auto temp = Transform * Matrix<3, 1, float>{ pt.x, pt.y, 1.f };
+	return { temp[0][0], temp[1][0] };
+}
 
 
 enum struct IntersectType
